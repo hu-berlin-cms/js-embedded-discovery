@@ -29,6 +29,7 @@ function IdPSelectUIParms(){
     this.setFocusTextBox = true;     // Set to false to supress focus 
     this.testGUI = false;
 
+    this.autoFollowCookie = null;  //  If you want auto-dispatch, set this to the cookie name to use
 
     //
     // Language support. 

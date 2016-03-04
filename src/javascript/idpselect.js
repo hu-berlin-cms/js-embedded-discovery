@@ -79,6 +79,30 @@ function IdPSelectUI() {
             return;
         }
 
+        //
+        // Quick test for auto-dispatch
+        //
+        if ((null != parms.autoFollowCookie) && (null != getCookieCalled( parms.autoFollowCookie ))) {
+
+            var prefs = retrieveUserSelectedIdPs();
+            if (prefs.length != 0) {
+                var retString = returnIDParam + '=' + encodeURIComponent(prefs[0]);
+                //
+                // Compose up the URL
+                //
+                if (returnString.indexOf('?') == -1) {
+                    retString = '?' + retString;
+                } else {
+                    retString = '&' + retString;
+                }
+                //
+                // Go there
+                //
+                location.href = returnString + retString;
+                return;
+            }
+        }
+
         idpSelectDiv = document.getElementById(parms.insertAtDiv);
         if(!idpSelectDiv){
             fatal(getLocalizedMessage('fatal.divMissing'));
