@@ -1094,19 +1094,19 @@ function IdPSelectUI() {
             return null;
         }
         for (i =0; i < idp.Logos.length; i++) {
-	    var logo = idp.Logos[i];
+            var logo = idp.Logos[i];
 
-	    if (logo.height == "16" && logo.width == "16") {
-		if (null == logo.lang ||
-		    lang == logo.lang ||
-		    (typeof majorLang != 'undefined' && majorLang == logo.lang) ||
-		    defaultLang == logo.lang) {
-		    return logo.value;
-		}
-	    }
-	}
+            if (logo.height == "16" && logo.width == "16") {
+                if (null == logo.lang ||
+                    lang == logo.lang ||
+                    (typeof majorLang != 'undefined' && majorLang == logo.lang) ||
+                    defaultLang == logo.lang) {
+                    return logo.value;
+                }
+            }
+        }
 
-	return null;
+        return null;
     } ;
 
     /**
@@ -1248,14 +1248,15 @@ function IdPSelectUI() {
         userSelectedIdPs = newList;
         return;
     };
-    
+
     /**
-       Gets the IdP previously selected by the user.
-      
-       @return {Array} user selected IdPs identified by their entity ID
+       Gets the value of the cookie with the provided name
+
+       @param (string) name - the name to look for
+       @return the value or null if no cookie of that name
     */
-    var retrieveUserSelectedIdPs = function(){
-        var userSelectedIdPs = [];
+
+    var getCookieCalled = function (name) {
         var i, j;
         var cookies;
 
@@ -1267,20 +1268,36 @@ function IdPSelectUI() {
             var cookie = cookies[i];
             var splitPoint = cookie.indexOf( '=' );
             var cookieName = cookie.substring(0, splitPoint);
-            var cookieValues = cookie.substring(splitPoint+1);
                                 
-            if ( '_saml_idp' == cookieName.replace(/^\s+|\s+$/g, '') ) {
-                cookieValues = cookieValues.replace(/^\s+|\s+$/g, '');
-                cookieValues = cookieValues.replace('+','%20');
-                cookieValues = cookieValues.split('%20');
-                for(j=cookieValues.length; j > 0; j--){
-                    if (0 === cookieValues[j-1].length) {
-                        continue;
-                    }
-                    var dec = base64Decode(decodeURIComponent(cookieValues[j-1]));
-                    if (dec.length > 0) {
-                        userSelectedIdPs.push(dec);
-                    }
+            if ( name ==  ( cookieName.replace(/^\s+|\s+$/g, ''))) {
+                return cookie.substring(splitPoint+1);
+            }
+        }
+        return null;
+    }
+
+    /**
+       Gets the IdP previously selected by the user.
+
+      @return {Array} user selected IdPs identified by their entity ID
+    */
+    var retrieveUserSelectedIdPs = function(){
+        var userSelectedIdPs = [];
+        var j;
+
+        var cookieValues = getCookieCalled( '_saml_idp' );
+
+        if ( cookieValues != null) {
+            cookieValues = cookieValues.replace(/^\s+|\s+$/g, '');
+            cookieValues = cookieValues.replace('+','%20');
+            cookieValues = cookieValues.split('%20');
+            for(j=cookieValues.length; j > 0; j--){
+                if (0 === cookieValues[j-1].length) {
+                    continue;
+                }
+                var dec = base64Decode(decodeURIComponent(cookieValues[j-1]));
+                if (dec.length > 0) {
+                    userSelectedIdPs.push(dec);
                 }
             }
         }
