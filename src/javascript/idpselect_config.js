@@ -30,6 +30,7 @@ function IdPSelectUIParms(){
     this.testGUI = false;
 
     this.autoFollowCookie = null;  //  If you want auto-dispatch, set this to the cookie name to use
+    this.autoFollowCookieTTLs = [ 1, 60, 270 ]; // Cookie life (in days).  Changing this requires changes to idp_select_languages
 
     //
     // Language support. 

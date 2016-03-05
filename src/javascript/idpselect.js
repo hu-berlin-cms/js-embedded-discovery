@@ -38,6 +38,9 @@ function IdPSelectUI() {
     var noWriteCookie;
     var ignoreURLParams;
 
+    var autoFollowCookie;
+    var autoFollowCookieTTLs;
+
     //
     // The cookie contents
     //
@@ -82,7 +85,7 @@ function IdPSelectUI() {
         //
         // Quick test for auto-dispatch
         //
-        if ((null != parms.autoFollowCookie) && (null != getCookieCalled( parms.autoFollowCookie ))) {
+        if ((null != autoFollowCookie) && (null != getCookieCalled( autoFollowCookie ))) {
 
             var prefs = retrieveUserSelectedIdPs();
             if (prefs.length != 0) {
@@ -182,6 +185,9 @@ function IdPSelectUI() {
         maxIdPCharsButton = paramsSupplied.maxIdPCharsButton;
         maxIdPCharsDropDown = paramsSupplied.maxIdPCharsDropDown;
         maxIdPCharsAltTxt = paramsSupplied.maxIdPCharsAltTxt;
+
+        autoFollowCookie = paramsSupplied.autoFollowCookie;
+        autoFollowCookieTTLs = paramsSupplied.autoFollowCookieTTLs;
 
         var lang;
 
@@ -628,6 +634,7 @@ function IdPSelectUI() {
        Builds the IdP selection UI.
 
        Three divs. PreferredIdPTime, EntryTile and DropdownTile
+       Optional div AutoDispatchPane
       
        @return {Element} IdP selector UI
     */
@@ -637,6 +644,9 @@ function IdPSelectUI() {
         preferredTileExists = buildPreferredIdPTile(containerDiv);
         buildIdPEntryTile(containerDiv, preferredTileExists);
         buildIdPDropDownListTile(containerDiv, preferredTileExists);
+        if (null != autoFollowCookie) {
+            buildAutoDispatchPane(containerDiv);
+        }
         return containerDiv;
     };
 
@@ -963,6 +973,54 @@ function IdPSelectUI() {
         parentDiv.appendChild(idpListDiv);
     };
 
+    var buildAutoDispatchPane = function(parent) {
+        var inputName = 'IdPSelectAutoDisp'
+
+        autoDispatchTile = buildDiv(undefined, 'autoDispatchArea');
+
+        autoDispatchTile.appendChild(document.createTextNode(getLocalizedMessage('autoFollow.message')));
+        //
+        // The "clear" button
+        //
+        var but = document.createElement('input');
+        but.setAttribute('type', 'radio');
+        but.setAttribute('checked', '');
+        but.setAttribute('name', inputName);
+        but.onclick = function () {
+            setAutoDispatchCookie(0);
+        }
+
+        div = buildDiv(undefined, 'autoDispatchTile');
+        div.appendChild(but);
+        div.appendChild(document.createTextNode(getLocalizedMessage('autoFollow.never')));
+        autoDispatchTile.appendChild(div);
+
+        var i;
+        for (i = 0; i < autoFollowCookieTTLs.length; i++) {
+            //
+            // The timed buttons
+            //
+            but = document.createElement('input');
+            but.setAttribute('type', 'radio');
+            but.setAttribute('checked', '');
+            but.setAttribute('name', inputName);
+
+            but.life = autoFollowCookieTTLs[i];
+            but.onclick = function () {
+                var f = this.life;
+                setAutoDispatchCookie(f);
+            }
+
+            div = buildDiv(undefined, 'autoDispatchTile');
+            div.appendChild(but);
+            div.appendChild(document.createTextNode(
+                getLocalizedMessage('autoFollow.time'+i)));
+            autoDispatchTile.appendChild(div);
+        }
+
+        parent.appendChild(autoDispatchTile);
+    }
+
     /**
        Builds the 'continue' button used to submit the IdP selection.
       
@@ -1273,6 +1331,26 @@ function IdPSelectUI() {
         return;
     };
 
+    /*
+       Set the autoFollowCookie with a life of the specified number of days
+       or clear it.
+
+       @parm (integer) days  The cookie lifetime if >0.  If <=0 clear cookie
+
+     */
+
+    var setAutoDispatchCookie = function(days) {
+        var expireDate;
+        if(days > 0){
+            var now = new Date();
+            cookieTTL = days * 24 * 60 * 60 * 1000;
+            expireDate = new Date(now.getTime() + cookieTTL);
+        } else {
+            expireDate = new Date(0);
+        }
+        document.cookie=autoFollowCookie + '=1;path=/;expires=' + expireDate.toUTCString();
+    }
+
     /**
        Gets the value of the cookie with the provided name
 
@@ -1281,6 +1359,7 @@ function IdPSelectUI() {
     */
 
     var getCookieCalled = function (name) {
+
         var i, j;
         var cookies;
 

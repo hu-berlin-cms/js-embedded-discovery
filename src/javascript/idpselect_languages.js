@@ -25,7 +25,12 @@ function IdPSelectLanguages(){
         'idpList.showSearch' : 'Allow me to specify the site',
         'submitButton.label': 'Continue',
         'helpText': 'Help',
-        'defaultLogoAlt' : 'DefaultLogo'
+        'defaultLogoAlt' : 'DefaultLogo',
+        'autoFollow.message' : 'Always follows this selection',
+        'autoFollow.never' : 'Never',
+        'autoFollow.time0' : 'One day',
+        'autoFollow.time1' : '3 months',
+        'autoFollow.time2' : '9 months'
     },
     'de': {
         'fatal.divMissing': 'Das notwendige Div Element fehlt',
