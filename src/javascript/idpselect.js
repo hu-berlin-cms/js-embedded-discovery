@@ -1283,7 +1283,7 @@ function IdPSelectUI() {
         // populate start of array with preselected IdPs
         //
         if(null != preferredIdP){
-            for(i=0; i < preferredIdP.length && i < maxPreferredIdPs-1; i++){
+            for(i=0; i < preferredIdP.length && i < maxPreferredIdPs; i++){
                 idps[i] = getIdPFor(preferredIdP[i]);
                 offset++;
             }
