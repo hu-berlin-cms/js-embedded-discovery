@@ -984,7 +984,7 @@ function IdPSelectUI() {
         //
         var but = document.createElement('input');
         but.setAttribute('type', 'radio');
-        but.setAttribute('checked', '');
+        but.setAttribute('checked', 'checked');
         but.setAttribute('name', inputName);
         but.onclick = function () {
             setAutoDispatchCookie(0);
@@ -1002,7 +1002,6 @@ function IdPSelectUI() {
             //
             but = document.createElement('input');
             but.setAttribute('type', 'radio');
-            but.setAttribute('checked', '');
             but.setAttribute('name', inputName);
 
             but.life = autoFollowCookieTTLs[i];
