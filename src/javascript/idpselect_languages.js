@@ -72,6 +72,11 @@ function IdPSelectLanguages(){
         'idpList.showList' : '一覧から選択する',
         'idpList.showSearch' : '機関名を入力する',
         'submitButton.label': '選択',
+        'autoFollow.message' : '次の期間選択した機関に自動的に遷移する:',
+        'autoFollow.never' : '自動遷移しない',
+        'autoFollow.time0' : '1日',
+        'autoFollow.time1' : '3か月',
+        'autoFollow.time2' : '9か月',
         'helpText': 'Help',
         'defaultLogoAlt' : 'DefaultLogo'
     },
